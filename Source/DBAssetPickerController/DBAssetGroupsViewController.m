@@ -107,7 +107,11 @@ static NSString *const kAssetGroupsCellIdentifier = @"DBAssetGroupCellID";
             
             PHFetchOptions *options = [PHFetchOptions new];
             if (self.assetMediaType == PHAssetMediaTypeVideo || self.assetMediaType == PHAssetMediaTypeImage) {
-                options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+                if (!self.customPredicate) {
+                    options.predicate = self.customPredicate;
+                } else {
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+                }                
             }
             PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:options];
             
@@ -168,7 +172,11 @@ static NSString *const kAssetGroupsCellIdentifier = @"DBAssetGroupCellID";
     
     PHFetchOptions *options = [PHFetchOptions new];
     if (self.assetMediaType == PHAssetMediaTypeVideo || self.assetMediaType == PHAssetMediaTypeImage) {
-        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+        if (!self.customPredicate) {
+            options.predicate = self.customPredicate;
+        } else {
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+        }  
     }
     PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:options];
     

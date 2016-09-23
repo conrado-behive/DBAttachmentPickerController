@@ -28,6 +28,8 @@ typedef void (^AlertActionHandler)(UIAlertAction * _Nonnull action);
 
 @property (assign, nonatomic, readonly) PHAssetMediaType assetMediaType;
 @property (assign, nonatomic, readonly) BOOL allowsMultipleSelection;
+@property (assign, nonatomic) NSArray *selectedItens;
+@property (assign, nonatomic) NSPredicate *customPredicate;
 
 + (_Nonnull instancetype)attachmentAlertControllerWithMediaType:(PHAssetMediaType)assetMediaType
                                         allowsMultipleSelection:(BOOL)allowsMultipleSelection

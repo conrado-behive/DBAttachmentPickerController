@@ -24,6 +24,7 @@
 #import "DBThumbnailPhotoCell.h"
 #import "NSIndexSet+DBLibrary.h"
 #import "NSBundle+DBLibrary.h"
+#import "DBAttachment.h"
 
 static const NSInteger kNumberItemsPerRowPortrait = 4;
 static const NSInteger kNumberItemsPerRowLandscape = 7;
@@ -68,6 +69,22 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([DBThumbnailPhotoCell class]) bundle:[NSBundle dbAttachmentPickerBundle]] forCellWithReuseIdentifier:kPhotoCellIdentifier];
     
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+    
+    [self.assetsFetchResults enumerateObjectsUsingBlock:^(PHAsset * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        for (DBAttachment *attachment  in self.selectedItens) {
+            if ([attachment.photoAsset.localIdentifier isEqualToString:obj.localIdentifier]) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+                [self.selectedIndexPathArray addObject:indexPath];
+                [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+                
+                return;
+            }
+        }
+    }];
+
+}
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -115,7 +132,11 @@ static NSString * const reuseIdentifier = @"Cell";
         PHFetchOptions *allPhotosOptions = [PHFetchOptions new];
         allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
         if (self.assetMediaType == PHAssetMediaTypeVideo || self.assetMediaType == PHAssetMediaTypeImage) {
-            allPhotosOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+            if (!self.customPredicate) {
+                allPhotosOptions.predicate = self.customPredicate;
+            } else {
+                allPhotosOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", self.assetMediaType];
+            }
         }
         
         self.assetsFetchResults = [PHAsset fetchAssetsInAssetCollection:self.assetCollection options:allPhotosOptions];
@@ -176,6 +197,12 @@ static NSString * const reuseIdentifier = @"Cell";
         cell = [[DBThumbnailPhotoCell alloc] init];
     }
     [self configurePhotoCell:cell atIndexPath:indexPath];
+    
+    if ([self.selectedIndexPathArray containsObject:indexPath]) {
+        [cell setSelected:YES];
+    } else {
+        [cell setSelected:NO];
+    }
     return cell;
 }
 

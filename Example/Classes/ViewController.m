@@ -54,11 +54,16 @@ static NSString *const kAttachmentCellIdentifier = @"AttachmentCellID";
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentIndex+i inSection:0];
             [indexPathArray addObject:indexPath];
         }
-        [weakSelf.attachmentArray addObjectsFromArray:attachmentArray];
-        [weakSelf.tableView insertRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
+        weakSelf.attachmentArray = [NSMutableArray arrayWithArray:attachmentArray];
+        [weakSelf.tableView reloadData];
+        //[weakSelf.attachmentArray addObjectsFromArray:attachmentArray];
+       // [weakSelf.tableView insertRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
 
     } cancelBlock:nil];
-    
+    //if (self.attachmentArray.count > 0) {
+      //  attachmentPickerController.selectedItens = self.attachmentArray;
+    //}
+   // attachmentPickerController.customPredicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", DBAttachmentMediaTypeImage];
     attachmentPickerController.mediaType = DBAttachmentMediaTypeImage | DBAttachmentMediaTypeVideo;
     attachmentPickerController.capturedVideoQulity = UIImagePickerControllerQualityTypeHigh;
     attachmentPickerController.senderView = senderView;

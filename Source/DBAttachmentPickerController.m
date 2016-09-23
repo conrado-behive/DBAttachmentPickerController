@@ -151,6 +151,11 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
                                                                                      NSArray<DBAttachment *> *attachmentArray = [weakSelf attachmentArrayFromPHAssetArray:assetArray];
                                                                                      [weakSelf finishPickingWithAttachmentArray:attachmentArray];
                                                                                  } allAlbumsHandler:^(UIAlertAction *action) {
+                                                                                     weakSelf.selectedItens = self.selectedItens;
+                                                                                     
+                                                                                     if (!self.customPredicate) {
+                                                                                         weakSelf.customPredicate = self.customPredicate;
+                                                                                     }
                                                                                      [weakSelf allAlbumsDidSelect];
                                                                                  } takePictureHandler:^(UIAlertAction *action) {
                                                                                      [weakSelf takePictureButtonDidSelect];
@@ -159,7 +164,9 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
                                                                                  } cancelHandler:^(UIAlertAction * _Nonnull action) {
                                                                                      [weakSelf cancelDidSelect];
                                                                                  }];
-    
+
+    self.alertController.selectedItens = self.selectedItens;
+    self.alertController.customPredicate = self.customPredicate;
     self.alertController.popoverPresentationController.sourceView = [self popoverPresentationView];
     self.alertController.popoverPresentationController.sourceRect = [self popoverPresentationRect];
     self.alertController.popoverPresentationController.permittedArrowDirections = [self popoverPresentationArrowDirection];
@@ -223,6 +230,7 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
     DBAssetPickerController *viewController =[[DBAssetPickerController alloc] init];
     viewController.assetMediaType = [self assetMediaType];
     viewController.assetPickerDelegate = self;
+    viewController.selectedItens = self.selectedItens;
     [self.initialViewController presentViewController:viewController animated:YES completion:nil];
 }
 

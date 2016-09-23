@@ -37,5 +37,7 @@ NS_ASSUME_NONNULL_END
 
 @property (weak, nonatomic, nullable) id<DBAssetPickerControllerDelegate> assetPickerDelegate;
 @property (assign, nonatomic) PHAssetMediaType assetMediaType;
+@property (nonatomic, assign) NSArray *selectedItens;
+@property (nonatomic, assign) NSPredicate *customPredicate;
 
 @end
