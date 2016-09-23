@@ -151,7 +151,8 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
                                                                                      NSArray<DBAttachment *> *attachmentArray = [weakSelf attachmentArrayFromPHAssetArray:assetArray];
                                                                                      [weakSelf finishPickingWithAttachmentArray:attachmentArray];
                                                                                  } allAlbumsHandler:^(UIAlertAction *action) {
-                                                                                     weakSelf.selectedItens = self.selectedItens;
+                                                                                     weakSelf.selectedItems = self.selectedItems;
+                                                                                     weakSelf.maxItems = self.maxItems;
                                                                                      
                                                                                      if (!self.customPredicate) {
                                                                                          weakSelf.customPredicate = self.customPredicate;
@@ -165,7 +166,8 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
                                                                                      [weakSelf cancelDidSelect];
                                                                                  }];
 
-    self.alertController.selectedItens = self.selectedItens;
+    self.alertController.selectedItems = self.selectedItems;
+    self.alertController.maxItems = self.maxItems;
     self.alertController.customPredicate = self.customPredicate;
     self.alertController.popoverPresentationController.sourceView = [self popoverPresentationView];
     self.alertController.popoverPresentationController.sourceRect = [self popoverPresentationRect];
@@ -230,7 +232,8 @@ const DBAttachmentMediaType DBAttachmentMediaTypeMaskAll = DBAttachmentMediaType
     DBAssetPickerController *viewController =[[DBAssetPickerController alloc] init];
     viewController.assetMediaType = [self assetMediaType];
     viewController.assetPickerDelegate = self;
-    viewController.selectedItens = self.selectedItens;
+    viewController.selectedItems = self.selectedItems;
+    viewController.maxItems = self.maxItems;
     [self.initialViewController presentViewController:viewController animated:YES completion:nil];
 }
 

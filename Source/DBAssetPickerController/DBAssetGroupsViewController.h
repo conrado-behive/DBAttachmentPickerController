@@ -37,5 +37,5 @@ NS_ASSUME_NONNULL_END
 @property (weak, nonatomic, nullable) id<DBAssetGroupsViewControllerDelegate> assetGroupsDelegate;
 @property (assign, nonatomic) PHAssetMediaType assetMediaType;
 @property (assign, nonatomic) NSPredicate *customPredicate;
-
+@property (nonatomic, retain) NSNumber *maxItems;
 @end

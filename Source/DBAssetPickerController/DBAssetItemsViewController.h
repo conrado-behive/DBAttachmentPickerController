@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_END
 @property (strong, nonatomic, nonnull) PHAssetCollection *assetCollection;
 @property (assign, nonatomic) PHAssetMediaType assetMediaType;
 @property (strong, nonatomic) NSArray *selectedItens;
+@property (nonatomic, retain) NSNumber *maxItems;
 @property (nonatomic, retain) NSPredicate *customPredicate;
 
 @end

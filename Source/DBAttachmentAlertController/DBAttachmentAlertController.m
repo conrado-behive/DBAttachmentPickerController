@@ -75,7 +75,7 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
     if ( showPhotoOrVideo && controller.assetsFetchResult.count ) {
         __weak DBAttachmentAlertController *weakController = controller;
         UIAlertAction *attachAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"All albums", @"Button on main menu") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if (![weakController.selectedIndexPathArray isEqualToArray:weakController.oldSelectedIndexPathArray] && weakController.selectedIndexPathArray.count > 0) {
+            if (weakController.selectedIndexPathArray.count > 0) {
                 if (attachHandler) {
                     attachHandler([weakController getSelectedAssetArray]);
                 }
@@ -126,7 +126,6 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.selectedIndexPathArray = [NSMutableArray arrayWithCapacity:100];
     self.oldSelectedIndexPathArray = [NSMutableArray new];
 
@@ -148,9 +147,9 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
         
         [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([DBThumbnailPhotoCell class]) bundle:[NSBundle dbAttachmentPickerBundle]] forCellWithReuseIdentifier:kPhotoCellIdentifier];
         
-        if (self.selectedItens.count>0) {
+        if (self.selectedItems.count>0) {
             [self.assetsFetchResult enumerateObjectsUsingBlock:^(PHAsset * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                for (DBAttachment *attachment  in self.selectedItens) {
+                for (DBAttachment *attachment  in self.selectedItems) {
                     if ([attachment.photoAsset.localIdentifier isEqualToString:obj.localIdentifier]) {
                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
                         [self.collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
@@ -185,7 +184,7 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
 - (void) viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     [self recalculateVisibleCellsSelectorOffsetWithScrollViewOffsetX:self.collectionView.contentOffset.x];
-
+    [self updateAttachPhotoCountIfNedded];
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -355,6 +354,17 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.maxItems) {
+        if ((self.selectedIndexPathArray.count < [self.maxItems intValue])) {
+            [self selectItemAtIndex:indexPath];
+        } else {
+            [self.collectionView deselectItemAtIndexPath:indexPath animated:YES];
+        }
+    }else {
+        [self selectItemAtIndex:indexPath];
+    }
+}
+- (void) selectItemAtIndex: (NSIndexPath *) indexPath {
     [self.selectedIndexPathArray addObject:indexPath];
     if (self.allowsMultipleSelection) {
         [self updateAttachPhotoCountIfNedded];
@@ -362,6 +372,7 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
     } else {
         self.extensionAttachHandler([self getSelectedAssetArray]);
     }
+
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -372,7 +383,7 @@ static NSString *const kPhotoCellIdentifier = @"DBThumbnailPhotoCellID";
 #pragma mark Helpers
 
 - (void)updateAttachPhotoCountIfNedded {
-    if (![self.selectedIndexPathArray isEqualToArray:self.oldSelectedIndexPathArray]) {
+    if (self.selectedIndexPathArray.count > 0) {
         NSArray *selectedItems = [self.collectionView indexPathsForSelectedItems];
         self.attachActionText = ( selectedItems.count ? [NSString stringWithFormat:NSLocalizedString(@"Attach %zd file(s)", @"Button on main menu"), selectedItems.count] : NSLocalizedString(@"All albums", nil) );
 

@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)DBAssetPickerController:(DBAssetPickerController *)controller didFinishPickingAssetArray:(NSArray<PHAsset *> *)assetArray;
 - (void)DBAssetPickerControllerDidCancel:(DBAssetPickerController *)controller;
 - (BOOL)DBAssetPickerControllerAllowsMultipleSelection:(DBAssetPickerController *)controller;
-NS_ASSUME_NONNULL_END
 
 @end
 
@@ -37,7 +36,9 @@ NS_ASSUME_NONNULL_END
 
 @property (weak, nonatomic, nullable) id<DBAssetPickerControllerDelegate> assetPickerDelegate;
 @property (assign, nonatomic) PHAssetMediaType assetMediaType;
-@property (nonatomic, assign) NSArray *selectedItens;
+@property (nonatomic, assign) NSArray *selectedItems;
 @property (nonatomic, assign) NSPredicate *customPredicate;
+@property (nonatomic, retain) NSNumber *maxItems;
+NS_ASSUME_NONNULL_END
 
 @end

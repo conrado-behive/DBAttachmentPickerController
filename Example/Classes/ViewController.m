@@ -60,9 +60,10 @@ static NSString *const kAttachmentCellIdentifier = @"AttachmentCellID";
        // [weakSelf.tableView insertRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
 
     } cancelBlock:nil];
-    //if (self.attachmentArray.count > 0) {
-      //  attachmentPickerController.selectedItens = self.attachmentArray;
-    //}
+    if (self.attachmentArray.count > 0) {
+        attachmentPickerController.selectedItems = self.attachmentArray;
+    }
+    attachmentPickerController.maxItems = @3;
    // attachmentPickerController.customPredicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", DBAttachmentMediaTypeImage];
     attachmentPickerController.mediaType = DBAttachmentMediaTypeImage | DBAttachmentMediaTypeVideo;
     attachmentPickerController.capturedVideoQulity = UIImagePickerControllerQualityTypeHigh;
